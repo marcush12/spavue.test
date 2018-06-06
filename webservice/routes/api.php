@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,9 +16,13 @@ use Illuminate\Http\Request;
 
 Route::post('/cadastro', function (Request $request) {
     $data = $request->all();
-    return $data;
+    $user = User::create([
+        'name' =>$data['name'],
+        'email' =>$data['email'],
+        'password' =>bcrypt($data['password'])
+    ]);
+    return $user;
 });
-
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
