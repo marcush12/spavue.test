@@ -2,9 +2,10 @@
   <span>
     <header>
       <nav-bar logo="Social" url="/" cor="green darken-1">
-        <li><router-link to="/">Home</router-link></li>
-        <li><router-link to="/login">Entrar</router-link></li>
-        <li><router-link to="/cadastro">Cadastre-se</router-link></li>
+        <li v-if="!usuario"><router-link to="/login">Entrar</router-link></li>
+        <li v-if="!usuario"><router-link to="/cadastro">Cadastre-se</router-link></li>
+        <li v-if="usuario"><router-link to="/perfil">{{usuario.name}}</router-link></li>
+        <li v-if="usuario"><a v-on:click="sair()">Sair</a></li>
       </nav-bar>
     </header>
 
@@ -51,11 +52,32 @@ import CardMenuVue from '@/components/layouts/CardMenuVue'
 
 export default {
   name: 'SiteTemplate',
+  data(){
+    return {
+      usuario: false
+    }
+  },
   components:{
     NavBar,
     FooterVue,
     GridVue,
     CardMenuVue
+  },
+  created(){
+    console.log('created()');
+    let usuarioAux = sessionStorage.getItem('usuario');
+    if (usuarioAux) {//variavel foi criada acima em data
+      this.usuario = JSON.parse(usuarioAux); //parse transf a string em obj: usuario passa a ser obj; atenção: não tem '' em usuarioAux
+    } else {
+      this.$router.push('/login') ;
+    }
+  },
+  methods:{
+    sair(){
+      sessionStorage.clear();//limpa a sessão do usuario
+      this.usuario = false;
+      this.$router.push('/login') ;
+    }
   }
 }
 </script>
