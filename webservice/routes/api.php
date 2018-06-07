@@ -21,7 +21,7 @@ Route::post('/cadastro', function (Request $request) {
     $validacao = Validator::make($data, [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
+            'password' => 'required|string|min:6|confirmed',//password_confirmation
         ]);
     if ($validacao->fails()) {
         return $validacao->errors();
@@ -58,4 +58,10 @@ Route::post('/login', function (Request $request) {
 
 Route::middleware('auth:api')->get('/usuario', function (Request $request) {
     return $request->user();
+});
+
+Route::middleware('auth:api')->put('/perfil', function (Request $request) {
+    $user = $request->user();
+    $data = $request->all();
+    return $data;
 });
