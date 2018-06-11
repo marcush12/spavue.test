@@ -18,9 +18,8 @@
             </card-menu-vue>
             <card-menu-vue>
               <h3>Amigos</h3>
-              <li>Linda</li>
-              <li>Georgina</li>
-              <li>Anita</li>
+              <li>Murilo</li>
+              <li>Gustavo</li>
             </card-menu-vue>
           </grid-vue>
           <grid-vue tamanho="8">
@@ -69,17 +68,17 @@ export default {
   created(){
     console.log('created()');
     let usuarioAux = sessionStorage.getItem('usuario');
-    if (usuarioAux) {//variavel foi criada acima em data
-      this.usuario = JSON.parse(usuarioAux); //parse transf a string em obj: usuario passa a ser obj; atenção: não tem '' em usuarioAux
-    } else {
-      this.$router.push('/login') ;
+    if(usuarioAux){
+      this.usuario = JSON.parse(usuarioAux);
+    }else{
+      this.$router.push('/login');
     }
   },
   methods:{
     sair(){
-      sessionStorage.clear();//limpa a sessão do usuario
+      sessionStorage.clear();
       this.usuario = false;
-      this.$router.push('/login') ;
+      this.$router.push('/login');
     }
   }
 }

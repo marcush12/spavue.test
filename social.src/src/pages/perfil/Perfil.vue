@@ -78,7 +78,6 @@ export default {
         this.imagem = e.target.result;
       };
       reader.readAsDataURL(arquivo[0]);
-      //console.log(this.imagem);
     },
     perfil(){
 
@@ -91,18 +90,18 @@ export default {
       },{"headers":{"authorization":"Bearer "+this.usuario.token}})
       .then(response => {
         //console.log(response)
-        if(response.data.token){
+        if(response.data.status){
           // login com sucesso
           console.log(response.data);
-          this.usuario = response.data;
-          sessionStorage.setItem('usuario',JSON.stringify(response.data));
+          this.usuario = response.data.usuario;
+          sessionStorage.setItem('usuario',JSON.stringify(this.usuario));
           alert('Perfil atualizado!');
 
-        }else{
+        }else if(response.data.status == false && response.data.validacao){
           // erros de validação
-          console.log('erros de validação')
+          //console.log('erros de validação')
           let erros = '';
-          for(let erro of Object.values(response.data)){
+          for(let erro of Object.values(response.data.erros)){
             erros += erro +" ";
           }
           alert(erros);

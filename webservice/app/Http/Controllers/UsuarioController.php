@@ -18,13 +18,13 @@ class UsuarioController extends Controller
                 'password' => 'required|string',
             ]);
         if ($validacao->fails()) {
-            return $validacao->errors();
+            return ['status'=>false, "validacao"=>true, "erros"=>$validacao->errors()] ;
         }
         if (Auth::attempt(['email'=>$data['email'], 'password'=>$data['password']])) {
             $user = auth()->user();
             $user->token = $user->createToken($user->email)->accessToken;
             $user->imagem = asset($user->imagem);
-            return $user;
+            return ['status'=>true, "usuario"=>$user];
         } else {
             return ['status'=>false];
         }
@@ -39,7 +39,7 @@ class UsuarioController extends Controller
                 'password' => 'required|string|min:6|confirmed',//password_confirmation
             ]);
         if ($validacao->fails()) {
-            return $validacao->errors();
+            return ['status'=>false, "validacao"=>true, "erros"=>$validacao->errors()] ;
         }
         $imagem = "/perfils/padrao.png";
         $user = User::create([
@@ -50,12 +50,9 @@ class UsuarioController extends Controller
         ]);
         $user->token = $user->createToken($user->email)->accessToken;
         $user->imagem = asset($user->imagem);
-        return $user;
+        return ['status'=>true, "usuario"=>$user];
     }
-    public function usuario(Request $request)
-    {
-        return $request->user();
-    }
+
     public function perfil(Request $request)
     {
         $user = $request->user();
@@ -67,7 +64,7 @@ class UsuarioController extends Controller
                 'password' => 'required|string|min:6|confirmed',//password_confirmation
             ]);
             if ($validacao->fails()) {
-                return $validacao->errors();
+                return ['status'=>false, "validacao"=>true, "erros"=>$validacao->errors()] ;
             }
             $user->password = bcrypt($data['password']);
         } else {
@@ -76,7 +73,7 @@ class UsuarioController extends Controller
                 'email' => ['required','string','email','max:255',Rule::unique('users')->ignore($user->id)],//ignorar a regra unique email
             ]);
             if ($validacao->fails()) {
-                return $validacao->errors();
+                return ['status'=>false, "validacao"=>true, "erros"=>$validacao->errors()] ;
             }
             $user->name = $data['name'];
             $user->email = $data['email'];
@@ -113,7 +110,7 @@ class UsuarioController extends Controller
             ], ['base64image'=>'Imagem inválida']);
 
             if ($valiacao->fails()) {
-              return $valiacao->errors();
+              return ['status'=>false, "validacao"=>true, "erros"=>$validacao->errors()] ;
             }
             $time = time();
             $diretorioPai = 'perfils';
@@ -140,6 +137,6 @@ class UsuarioController extends Controller
         $user->save();
         $user->imagem = asset($user->imagem);//asset é helper do laravel p montar caminho p dir public
         $user->token = $user->createToken($user->email)->accessToken;
-        return $user;
+        return ['status'=>true, "usuario"=>$user];
     }
 }

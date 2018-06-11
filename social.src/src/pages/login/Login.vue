@@ -27,7 +27,7 @@
 
 <script>
 import LoginTemplate from '@/templates/LoginTemplate'
-import axios from 'axios'
+import axios from 'axios';
 
 
 export default {
@@ -47,29 +47,30 @@ export default {
       axios.post(`http://127.0.0.1:8000/api/login`, {
         email: this.email,
         password:this.password
-
       })
       .then(response => {
         //console.log(response)
-        if(response.data.token){
+        if(response.data.status){
           // login com sucesso
           console.log('login com sucesso')
-          //js abaixo; setItem cria elemento; JSON.stringify pega lista de obj json em transforma em txt ou string; objeto contido em response.data; pode usar tb localStorage
-          sessionStorage.setItem('usuario', JSON.stringify(response.data));
-          //mandando o usuario para home
-          this.$router.push('/') ;//$router variavel global pertence ao sistema de rotas do vuejs
-        }else if(response.data.status == false){
+          sessionStorage.setItem('usuario',JSON.stringify(response.data.usuario));
+          this.$router.push('/');
+        }else if(response.data.status == false && response.data.validacao){
+          console.log('erros de validação')
+          let erros = '';
+          for(let erro of Object.values(response.data.erros)){
+            erros += erro +" ";
+          }
+          alert(erros);
           //login não existe
           console.log('login não existe')
           alert('Login inválido!');
         }else{
-          // erros de validação
-          console.log('erros de validação')
-          let erros = '';
-          for(let erro of Object.values(response.data)){
-            erros += erro +" ";
-          }
-          alert(erros);
+          //login não existe
+          console.log('login não existe')
+          alert('Login inválido!');
+
+
         }
       })
       .catch(e => {
