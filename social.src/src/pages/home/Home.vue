@@ -9,7 +9,7 @@
         <grid-vue tamanho="8">
           <span class="black-text">
             <h5>{{usuario.name}}</h5>
-            
+
           </span>
         </grid-vue>
       </div>
@@ -55,9 +55,9 @@ export default {
     }
   },
   created(){
-    let usuarioAux = sessionStorage.getItem('usuario');
+    let usuarioAux = this.$store.getters.getUsuario;
     if(usuarioAux){
-      this.usuario = JSON.parse(usuarioAux);
+      this.usuario = this.$store.getters.getUsuario;
 
     }
   },

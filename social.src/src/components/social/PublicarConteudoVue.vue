@@ -4,11 +4,11 @@
       <input type="text" v-model="conteudo.titulo">
       <textarea v-if="conteudo.titulo" placeholder="Conteúdo" v-model="conteudo.texto" class="materialize-textarea"></textarea>
       <input v-if="conteudo.titulo && conteudo.texto" type="text" placeholder="Link" v-model="conteudo.link">
-      <input v-if="conteudo.titulo && conteudo.texto" type="text" placeholder="Url da imagem" v-model="conteudo.imagem">
+      <input v-if="conteudo.titulo && conteudo.texto" type="text" placeholder="Url da Imagem" v-model="conteudo.imagem">
       <label>O que está acontecendo?</label>
     </grid-vue>
     <p class="right-align">
-      <button v-on:click="addConteudo()" v-if="conteudo.titulo && conteudo.texto" class="btn waves-effect waves-light">Publicar</button>
+      <button @click="addConteudo()" v-if="conteudo.titulo && conteudo.texto" class="btn waves-effect waves-light" >Publicar</button>
     </p>
   </div>
 </template>
@@ -21,7 +21,7 @@ export default {
   props:[],
   data () {
     return {
-      conteudo:{titulo:'', texto: '', link: '', imagem: ''}
+      conteudo:{titulo:'',texto:'', link:'', imagem:''}
     }
   },
   components:{
@@ -30,7 +30,20 @@ export default {
   methods:{
     addConteudo(){
       console.log(this.conteudo);
-      this.$http.post()
+      this.$http.post(this.$urlAPI+'conteudo/adicionar',{
+        titulo: this.conteudo.titulo,
+        texto: this.conteudo.texto,
+        link: this.conteudo.link,
+        imagem: this.conteudo.imagem
+      },
+      {"headers":{"authorization":"Bearer "+this.$store.getters.getToken}}).then(response => {
+        if(response.data.status){
+          console.log(response.data.conteudos);
+        }
+      }).catch(e =>{
+        console.log(e);
+        alert("Erro! tente mais tarde!");
+      });
     }
   }
 }

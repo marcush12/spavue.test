@@ -1,7 +1,7 @@
 <template>
   <span>
     <header>
-      <nav-bar logo="Social" url="/" cor="green darken-1">        
+      <nav-bar logo="Social" url="/" cor="green darken-1">
         <li v-if="!usuario"><router-link to="/login">Entrar</router-link></li>
         <li v-if="!usuario"><router-link to="/cadastro">Cadastre-se</router-link></li>
         <li v-if="usuario"><router-link to="/perfil">{{usuario.name}}</router-link></li>
@@ -59,16 +59,10 @@ export default {
   },
   created(){
     console.log('created()');
-    let usuarioAux = sessionStorage.getItem('usuario');
+    let usuarioAux = this.$store.getters.getUsuario;
     if(usuarioAux){
-      this.usuario = JSON.parse(usuarioAux);
+      this.usuario = this.$store.getters.getUsuario;
       this.$router.push('/');
-    }
-  },
-  methods:{
-    sair(){
-      sessionStorage.clear();
-      this.usuario = false;
     }
   }
 }
