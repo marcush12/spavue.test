@@ -19,15 +19,14 @@
       <publicar-conteudo-vue />
 
 
-      <card-conteudo-vue
-        perfil="http://materializecss.com/images/yuna.jpg"
-        nome="Maria Silva"
-        data="13/01/18 13:30">
+      <card-conteudo-vue v-for="item in conteudos" :key="item.id"
+        :perfil="item.user.imagem"
+        :nome="item.user.name"
+        :data="item.data">
           <card-detalhe-vue
-            img="http://materializecss.com/images/sample-1.jpg"
-            titulo=""
-            txt="I am a very simple card. I am good at containing small bits of information.
-            I am convenient because I require little markup to use effectively."  />
+            :img="item.imagem"
+            :titulo="item.titulo"
+            :txt="item.texto"  />
       </card-conteudo-vue>
     </span>
 
@@ -51,13 +50,26 @@ export default {
   name: 'Home',
   data () {
     return {
-      usuario:false
+      usuario:false,
+      conteudos:[]
     }
   },
   created(){
     let usuarioAux = this.$store.getters.getUsuario;
     if(usuarioAux){
       this.usuario = this.$store.getters.getUsuario;
+      this.$http.get(this.$urlAPI+`conteudo/lista`, {"headers":{"authorization":"Bearer "+this.$store.getters.getToken}})
+      .then(response => {
+        console.log(response);
+        if(response.data.status){
+          this.conteudos = response.data.conteudos.data;
+        }
+
+      })
+      .catch(e => {
+        console.log(e)
+        alert("Erro! Tente novamente mais tarde!");
+      })
 
     }
   },

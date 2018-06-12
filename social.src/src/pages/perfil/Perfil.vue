@@ -41,7 +41,7 @@
 
 <script>
 import SiteTemplate from '@/templates/SiteTemplate'
-import axios from 'axios';
+
 
 export default {
   name: 'Perfil',
@@ -81,7 +81,7 @@ export default {
     },
     perfil(){
 
-      axios.put(`http://127.0.0.1:8000/api/perfil`, {
+      this.$http.put(this.$urlAPI+`perfil`, {
         name: this.name,
         email: this.email,
         imagem: this.imagem,
@@ -92,9 +92,9 @@ export default {
         //console.log(response)
         if(response.data.status){
           // login com sucesso
-          console.log(response.data);
+          //console.log(response.data);
           this.usuario = response.data.usuario;
-          this.$store.commit('setUsuario', response.data.usuario);
+          this.$store.commit('setUsuario',response.data.usuario);
           sessionStorage.setItem('usuario',JSON.stringify(this.usuario));
           alert('Perfil atualizado!');
 

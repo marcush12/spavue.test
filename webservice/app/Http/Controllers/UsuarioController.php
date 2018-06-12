@@ -23,7 +23,7 @@ class UsuarioController extends Controller
         if (Auth::attempt(['email'=>$data['email'], 'password'=>$data['password']])) {
             $user = auth()->user();
             $user->token = $user->createToken($user->email)->accessToken;
-            $user->imagem = asset($user->imagem);
+            //$user->imagem = asset($user->imagem);
             return ['status'=>true, "usuario"=>$user];
         } else {
             return ['status'=>false];
@@ -49,7 +49,7 @@ class UsuarioController extends Controller
             'imagem' =>$imagem
         ]);
         $user->token = $user->createToken($user->email)->accessToken;
-        $user->imagem = asset($user->imagem);
+        //$user->imagem = asset($user->imagem);
         return ['status'=>true, "usuario"=>$user];
     }
 
@@ -124,8 +124,9 @@ class UsuarioController extends Controller
                 mkdir($diretorioPai, 0700);//cria dir com permissão 0700
             }
             if ($user->imagem) {
-                if (file_exists($user->imagem)) {
-                    unlink($user->imagem);
+                $imgUser = str_replace(asset('/'), '', $user->imagem);//vai retirar asset e deixar somente a imagem
+                if (file_exists($imgUser)) {
+                    unlink($imgUser);
                 }
             }
             if (!file_exists($diretorioImagem)) {
@@ -135,7 +136,7 @@ class UsuarioController extends Controller
             $user->imagem =$urlImagem;
         }
         $user->save();
-        $user->imagem = asset($user->imagem);//asset é helper do laravel p montar caminho p dir public
+        //$user->imagem = asset($user->imagem);//asset é helper do laravel p montar caminho p dir public
         $user->token = $user->createToken($user->email)->accessToken;
         return ['status'=>true, "usuario"=>$user];
     }
